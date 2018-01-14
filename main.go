@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"reflect"
 )
@@ -28,24 +29,12 @@ func NewDefaultDict(def interface{}) *DefaultDict {
 }
 
 // Get gets the value from the map, or returns the default key for this type
-func (d *DefaultDict) Get(key interface{}) defaultType {
+func (d *DefaultDict) Get(key interface{}) interface{} {
 	val, ok := d.Content[key]
 	if !ok {
-		val := d.getDefault()
+		return d.getDefault()
 	}
 	return val
-}
-
-// Set sets the value for the given key
-// returns error if the type isn't the default one
-func (d *DefaultDict) Set(key interface{}, value interface{}) error {
-	err := checkDefault(value)
-	if err != nil {
-		return error
-	}
-	d.Content[key] = value
-
-	return nil
 }
 
 // checkDefault checks it the type of the argument corresponds
@@ -54,8 +43,19 @@ func (d *DefaultDict) checkDefault(value interface{}) error {
 	v := reflect.ValueOf(value)
 	dv := reflect.ValueOf(d.DefaultFactory)
 	if v.Kind() != dv.Kind() {
-		return error
+		return errors.New("invalid type")
 	}
+
+	return nil
+}
+
+// Set sets the value for the given key
+// returns error if the type isn't the default one
+func (d *DefaultDict) Set(key interface{}, value interface{}) error {
+	if d.checkDefault(value) != nil {
+		return errors.New("invalid value type")
+	}
+	d.Content[key] = value
 
 	return nil
 }
