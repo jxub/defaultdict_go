@@ -5,8 +5,8 @@
 
 ```zsh
 $ go get github.com/jxub/defaultdict_go
-:tada::shit::fire:
 ```
+:tada::shit::fire:
 
 ## Usage
 
