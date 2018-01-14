@@ -16,7 +16,7 @@ import "github.com/jxub/defaultdict_go" dd
 func main() {
     // create a defaultdict with default values of 0,
     // as int() constrictor yields in Python
-    d := dd.New(0)
+    d := dd.NewDefaultDict(0)
 
     // Get and Set works as usual
     d.Set("bitcoin", 14364)
